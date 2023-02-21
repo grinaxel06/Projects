@@ -14,6 +14,7 @@ public class Main {
         for(Integer m:Arr){
             System.out.println(m);
         }
+        System.out.println(arr.binarySearch(2));
 
 
 

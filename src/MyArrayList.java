@@ -1,7 +1,7 @@
 import java.util.Collections;
 import java.util.Iterator;
 
-public class MyArrayList<T> implements Iterable<T> {
+public class MyArrayList<T extends Comparable<T>> implements Iterable<T> {
     private Object[] data;
     private int capacity; // real size
     private int size = 0; // fill size
@@ -14,6 +14,7 @@ public class MyArrayList<T> implements Iterable<T> {
         this.capacity = capacity;
         data = new Object[capacity];
     }
+    public Object[] getData(){return data;}
 
     public MyArrayList() {
         this(10);
@@ -64,23 +65,33 @@ public class MyArrayList<T> implements Iterable<T> {
         }
         return -1;
     }
+
+
+
     public void addAll( MyArrayList arrayList){
-        MyArrayListIterator iter = new MyArrayListIterator();
-        try {
-            while (iterator().hasNext()) {
-                this.set(iter.cursor,(T)arrayList.data[iter.cursor]);
-                iter.cursor++;
+        Object[] arr = new Object[size + arrayList.size()];
+        System.arraycopy(this.data, 0, arr, 0, size);
+        System.arraycopy(arrayList.getData(), 0, arr, size, arrayList.size());
+        this.data = arr;
+        size += arrayList.size();
+    }
+    public int binarySearch( T value) {
+        int l = 0;
+        int r = size - 1;
 
+        while (l <= r) {
+            int mid = (l + r) / 2;
+
+            if (data[mid] == value) {
+                return mid;
+            } else if (value.compareTo((T) data[mid]) > 0) {
+                l = mid + 1;
+            } else {
+                r = mid - 1;
             }
-        }catch (IndexOutOfBoundsException e){
-
         }
 
-    }
-    public void addAll( MyArrayList arrayList,int index){
-        if (index < 0 || index >= size) throw new IndexOutOfBoundsException("index: " + index + " size: " + size);
-        System.arraycopy(arrayList.data, index, data, index, size-index );
-
+        return -1; // not found
     }
 
 
